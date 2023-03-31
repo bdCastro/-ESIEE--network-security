@@ -1,84 +1,106 @@
-% LaTeX Template for short student reports.
-% Citations should be in bibtex format and go in references.bib
-\documentclass[a4paper, 11pt]{article}
-\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
-\geometry{a4paper} 
-\usepackage[utf8]{inputenc}
-\usepackage{textcomp}
-\usepackage{graphicx} 
-\usepackage{amsmath,amssymb}  
-\usepackage{bm}  
-\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
-%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
-\usepackage{memhfixc} 
-\usepackage{pdfsync}  
-\usepackage{fancyhdr}
-\pagestyle{fancy}
+\documentclass{article}
+\usepackage{listings}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{color}
+\usepackage[a4paper, total={6.5in, 10in}]{geometry}
 
-\title{Network Security Lab Report \\
-\vspace{0.5cm} \large \textit{Part 1 - DNS Attack}}
-\author{Bruno Luiz de Castro}
-\date{ \today }
+\lstnewenvironment{C}
+  {\lstset{language=C}} 
+%Add your addition parameters as required like showstringspaces , line numbering , 
+% frames , etc.seperated by a comma as shown in the CPP  environment 
+  {}
+\lstnewenvironment{CPP}
+  {\lstset{language=C++,basicstyle=\ttfamily\small,frame=none}}
+  {}
+\lstnewenvironment{Java}
+  {\lstset{language=Java}}
+  {}
+\lstnewenvironment{Python}
+  {\lstset{language=Python}}
+  {}
+
+\title{\huge TP3 Report \\ Artificial Intelligence}
+\author{Bruno Luiz Dias Alves de Castro \\ Victor Gabriel Mendes Sündermann}
+\date{April 2023}
 
 \begin{document}
 
-\begin{titlepage}
-\centering
-\includegraphics[width=0.15\textwidth]{example-image-1x1}\par\vspace{1cm}
-{\textsc{Network Security} \par}
-\vspace{1cm}
-{\Large \textsc{Lab Report}\par}
-\vspace{1.5cm}
-{\huge\bfseries Part 1 - DNS Attack \par}
-\vspace{2cm}
-{\Large\itshape Bruno Luiz de Castro \par}
-\vfill
-% teacher\par
-% Antoine Houssais \textsc{Brown}
-
-\vfill
-
-% Bottom of the page
-{\large \today\par}
-\end{titlepage}
-
-\pagebreak
-\tableofcontents
+\maketitle
 
 \section{Introduction}
 
-My project was about \ldots
+In this report, we will present the results of the third project of the Artificial Intelligence course. The project consists of implementing
 
-I developed a system to \ldots
+\section{Tests}
+To run the program, we use the following command:
 
-We did some experiments to find out \ldots
+\hbox{}
 
-The main results were \ldots
+\begin{lstlisting}[language=bash]
+    python3 pacman_AIC.py -p ReflexAgent [-l testClassic]
+\end{lstlisting}
 
-\pagebreak
+\hbox{}
 
-\section{Background}
+Running the command without the flag \textit{-l testClassic}, renders a version of the maze without any walls.
 
-I did some background reading in the following areas \ldots
+The first two tests ran as expected, the Pacman tries to eat all the food in the field while avoiding all the ghosts. The mai problem with both tests is that, while avoiding the ghosts, it'll stay in place most of the time, and not go after the food.
 
-\pagebreak
+This can be improved by implementing an evaluation function, which will be developed in the next section.
 
-\section{System Design}
+\section{Reflex Agent}
 
-My system worked as follows \ldots
+In this part, we were purposed to improve the \textbf{ReflexAgent} function in the \textbf{multiAgents.py} file in the project by proposing an evaluation function.
 
-\pagebreak
+\subsection{ReflexAgent improvement}
 
-\section{Evaluation}
+In order to improve the \textbf{ReflexAgent}, we need a good evalution function to help the AI decide what to do next. A great evaluation function should be able to tell the agent what is the best action to take in a given state, rewarding good actions and punishing bad ones.
 
-We did some experiments \ldots
+For our problem, we decided that a good action should be eating a food pellet, and a bad action should be getting eaten by a ghost. So, our evaluation function calculates the distance of Pacman to the food pallets and the ghosts. It then returns a score like the following:
 
-\pagebreak
+\hbox{}
 
-\section{Conclusions and Future Work}
+\begin{lstlisting}[language=python]
+    return score + closestFoodScore - closestGhostScore
+\end{lstlisting}
 
-From our experiments we can conclude that \ldots
+\hbox{}
 
-\bibliographystyle{abbrv}
-% \bibliography{references}  % need to put bibtex references in references.bib 
+We also decided on using the Manhattan distance to calculate the distance between Pacman, the ghosts and the food pellets, because it is a less computationally expensive sollution to this problem, and don't really affect the final score.
+
+\hbox{}
+
+Finally, the result we got is the following:
+
+\hbox{}
+
+\definecolor{light-gray}{gray}{0.95}
+\begin{lstlisting}[language=python, frame=tlbr, framesep=6pt, backgroundcolor=\color{light-gray}]
+def evaluationFunction(self, currentGameState, action):
+
+    """ VARIABLES """
+
+    foodList = newFood.asList()
+
+    # manhattan distance
+    foodDistances = \
+        [manhattanDistance(newPos, food) for food in foodList]
+    ghostDistances = \
+        [manhattanDistance(newPos, ghost) for ghost in newGhostsPos]
+
+    # closest food and ghost
+    closestFood = min(foodDistances) if len(foodDistances) > 0 else 0
+    closestGhost = min(ghostDistances) if len(ghostDistances) > 0 else 0
+
+    # score calculation for food and ghost
+    closestFoodScore = 0 if closestFood == 0 else 1.0/closestFood
+    closestGhostScore = 0 if closestGhost == 0 else 1.0/closestGhost
+
+    score = closestFoodScore - closestGhostScore
+
+    return successorGameState.getScore() + score
+\end{lstlisting}
+
+\section{Batata Frita}
+
 \end{document}

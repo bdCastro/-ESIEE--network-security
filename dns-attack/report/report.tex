@@ -88,91 +88,40 @@ But a problem arises as the server is unreachable, this is caused by adding the 
   };
 \end{lstlisting}
 
+After following the next steps, if the code is run without the line mentioned above we can run it without errors.
 
+At task 3 we configure a zone so that the DNS server is able to retrieve data from other domains, on step 2 the code given was wrong, so the group had to rewrite it in order to make it functional, the resulting code can be seen bellow:
+
+\hbox{}
+
+\includegraphics[scale=0.5]{images/bind-config-corrected.png}
+
+\hbox{}
+
+After running the corrected code we can see that the server is able to retrieve data from other domains, after this steps 3 and 4 were run without any changes to the code.
+The result can be seen bellow when we run the dig command to retrieve data from the example.com domain:
+
+\hbox{}
+
+\includegraphics[scale=0.5]{images/dig-examplecom.png}
+
+\hbox{}
+
+Now that the server is successfully functioning it's time to realize the DNS Cache Poisoning attack, this is done by running the command 'netwox'and sending the IPs of the server, the targeted website and to wich IP the victim will be redirected.
+Bellow is a photo of the command and it's result:
+
+\hbox{}
+
+\includegraphics[scale=0.5]{images/netwox-google.png}
+
+\hbox{}
 
 \hbox{}
 
 \pagebreak
-\section{Bonus: Evaluation function improvement}
-
-After implementing and running countless test to all algorithm proposed, we identified a serious problem with the evaluation function used in the project: It was the main piece holding our implementations back, and the perormance of our algorithms were suffering a lot because of it.
-
-The default evaluation function implemented in the project is the \textit{\textbf{scoreEvaluationFunction}}. The evaluation function only takes into account the current score of the games. It gets the work done in some of the cases, but has two serious draw-backs: It doesn't take into account the number of food left in the maze, and it doesn't take into account the distance to the closest food. As a result, when the Pacman gets "isolated" in a part of the map without any food, it hasn't anything to maximize, and needs a ghost to approch in order to proceed the game.
-
-To solve this problem, we sugest a new evaluation function, called \textit{\textbf{betterEvaluationFunction}}. It's implementation and functionallity is explained in the following section.
-
-\subsection{The new evaluation function: betterEvaluationFunction}
-
-The proposed evaluation function takes into account this two extra parameters (along with the score): \textit{the number of food pallets left} and \textit{the distance to the closest food}. The number of food pallets left encourages the Pacman to eat more pallets when stuck, and the distance to the closest food will prevent the Pacman of isolating itself in the maze.
-
-the implementation is described in the following section.
-
-\subsubsection{betterEvaluationFunction implementation}
-
-To implement the new evaluation function, we created a new function in the code, as follows:
-
-\begin{table}[!ht]
-  \begin{lstlisting}[language=python, frame=tlbr, framesep=6pt, backgroundcolor=\color{light-gray}]
-def betterEvaluationFunction(currentGameState):
-  """
-  Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-  evaluation function (question 8).
-
-  DESCRIPTION: <write something here so we know what you did>
-  """
-  
-  def closestFoodDistance(gameState):
-    pacmanPosition = gameState.getPacmanPosition()
-    foodList = gameState.getFood().asList()
-
-    if len(foodList) == 0:
-        return 0
-
-    return min([manhattanDistance(pacmanPosition, food) for food in foodList])
-
-  closestFood = closestFoodDistance(currentGameState)
-  return currentGameState.getScore() - (10 * closestFood) \ 
-    - (100 * currentGameState.getNumFood())
-  \end{lstlisting}
-  \caption{betterEvaluationFunction implementation}
-\end{table}
-
-For calculation the distance to the closest food, we used the the Manhattan Distance (implemented in the function itself), and the number of food is retrieved from the game state. They are multiplied by 10 and 100, respectively, in order to have a bigger impact in the final score, and subtracted from the current game score.
-
-The results of our implementation is showed in the next section.
-
-\subsubsection{betterEvaluationFunction tests}
-
-To test the new \textit\textbf{{betterEvaluationFunction}}, we repeated the same tests executed before, now using the this new evaluation function instead of the old \textit\textbf{{scoreEvaluationFunction}}. We chose the  \textit\textbf{{Expectimax agent}} to run the tests. Its description and implementation can be found in Section~\ref{sec:expectimax}.
-~\\
-~\\
-The result of the tests can be found in Table~\ref{tab:expectimax-better}.
-
-~\\
-\begin{table}[!ht]
-  \begin{center}
-    \begin{tabular}{||c||c|c|c|c||}
-      \hline
-      Depth & 2 & 3 & 4 \\
-      \hline\hline
-      Average &  1228.6 &  1340.15 &  1131.25 \\
-      \hline\hline
-      Best & 1724 & 1757 & 1743 \\
-      \hline\hline
-      Win Rate & 19/20 (0.95) & 20/20 (1.00) & 19/20 (0.95) \\
-      \hline
-    \end{tabular}
-    \caption{Expectimax test results with betterEvaluationFunction}
-    \label{tab:expectimax-better}
-  \end{center}
-\end{table}
-
-Comparing both results of Tables~\ref{tab:expectimax} and~\ref{tab:expectimax-better}, it's possible to observe a huge gain in performance. By only altering the evaluation function, we were able to obtain way batter results, even reaching a Win Rate of 100\% in some test cases, and performing well in the cases with lower depths.
-
-\pagebreak
 \section{Conclusion}
 
-This lab was essential on the understanding of the DNS server and the Firewall, by allowing us to create and configure them first-hand.
+This lab was essential on the understanding of the DNS server by allowing us to create and configure it first-hand.
 We were able to fully understand how to configure, run and realize attacks on a DNS server, we also got more used to the Linux environment as it was necessary to configure files and run commands on the bash terminal.
 On top of that we also gained knowledge on the form of communication between the machines by using the Wireshark and Scapy tool to visualize the traffic on the network and the packets sent.
 

@@ -63,19 +63,15 @@ After creating and configuring the VM's they were connected to the same NAT netw
 
 For the server to be initialized it's necessary to run a DNS server software, for this lab the BIND9 was used and the following figure shows that rhe server was able to communicate with external webites:
 
-\hbox{}
-
-\includegraphics[scale=0.5]{images/dig-google.png}
-
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.5]{images/dig-google.png}
+\end{center}
 
 Now that our server is running we can visualize the packets that went trought it with Wireshark, the picture bellow shows the results from a ping to Google's website:
 
-\hbox{}
-
-\includegraphics[scale=0.5]{images/ping-google.png}
-
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.4]{images/ping-google.png}
+\end{center}
 
 But a problem arises as the server is unreachable, this is caused by adding the following line of code requested at Step 1 from Task 2, ultimately causing the server to not be initialized.
 
@@ -92,31 +88,58 @@ After following the next steps, if the code is run without the line mentioned ab
 
 At task 3 we configure a zone so that the DNS server is able to retrieve data from other domains, on step 2 the code given was wrong, so the group had to rewrite it in order to make it functional, the resulting code can be seen bellow:
 
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.5]{images/bind-config-corrected.png}
+\end{center}
 
-\includegraphics[scale=0.5]{images/bind-config-corrected.png}
-
-\hbox{}
-
-After running the corrected code we can see that the server is able to retrieve data from other domains, after this steps 3 and 4 were run without any changes to the code.
+After running the corrected code we can see that the server is able to retrieve data from other domains, we then add the line of code that was creating an error before, after this, steps 3 and 4 were run without any changes to the code.
 The result can be seen bellow when we run the dig command to retrieve data from the example.com domain:
 
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.5]{images/dig-examplecom.png}
+\end{center}
 
-\includegraphics[scale=0.5]{images/dig-examplecom.png}
 
-\hbox{}
-
-Now that the server is successfully functioning it's time to realize the DNS Cache Poisoning attack, this is done by running the command 'netwox'and sending the IPs of the server, the targeted website and to wich IP the victim will be redirected.
+Now that the server is successfully functioning it's time to realize a Spoofing attack, this is done by running the command 'netwox'and sending the IPs of the server, the targeted website and to wich IP the victim will be redirected.
 Bellow is a photo of the command and it's result:
 
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.5]{images/netwox-google.png}
+\end{center}
 
-\includegraphics[scale=0.5]{images/netwox-google.png}
+For task 6 and 7 we realize a DNS cache poisoning attack, this aims to make the effects of the spoofing attack almost permanent, this is done by changing the DNS server's cache to redirect the victim to the attacker's IP, the code bellow shows the changes made to the server's configuration file:
 
-\hbox{}
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task7-code.png}
+\end{center}
 
-\hbox{}
+After running the code we can see that the server is now redirecting the victim to the attacker's IP, the result can be seen bellow:
+
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task7.png}
+\end{center}
+
+On task 8 we continue our attack but aiming another domain this time, for this we simply had to change the domain name on the code and run it again, the new code and result can be seen bellow:
+
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task8-code.png}
+\end{center}
+
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task8.png}
+\end{center}
+
+Finally for task 9 we target the additional information stored on a DNS request, for this we changed the authority and additional sections on the code which can be seen bellow:
+
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task9-code.png}
+\end{center}
+
+Running this new code we can see that the server is now redirecting the victim to the attacker's IP and also showing the additional information of the DNS, as seen in the figure:
+
+\begin{center}
+  \includegraphics[scale=0.5]{images/Task9.png}
+\end{center}
 
 \pagebreak
 \section{Conclusion}
